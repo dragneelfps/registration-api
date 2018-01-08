@@ -1,0 +1,6 @@
+{
+  "db_url" : "mongodb://dragneelfps:pass1234@ds245287.mlab.com:45287/users",
+  "db_username" : "dragneelfps",
+  "db_password" : "pass1234",
+  "server_port" : 8000
+}

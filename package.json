@@ -1,0 +1,16 @@
+{
+  "name": "registration-api",
+  "version": "1.0.0",
+  "description": "Backened API for admin and client registration",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sourabh@dragneelfps",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.9"
+  }
+}
