@@ -24,6 +24,11 @@ var clientModel = mongoose.Schema({
     id_code: {
         type: String,
         required: true
+    },
+    admin: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Admin',
+        required: true
     }
 });
 
