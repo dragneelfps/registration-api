@@ -26,7 +26,7 @@ module.exports = function (app) {
             if(admin){
                 res.status(200).json({info: "Credentials correct", admin: admin});
             }else{
-                res.status(404).json({info: "Incorrect credentials"});
+                res.status(401).json({info: "Incorrect credentials"});
             }
         });
     });
@@ -34,19 +34,22 @@ module.exports = function (app) {
     // Get admin id
     app.get('/api/admin/id', function (req, res) {
         if(req.query.id_code === undefined || req.query.id_code === '' ){
-            res.status(400).json({error: 'No id_code specified'})
+            res.status(400).json({error: 'No id_code specified'});
         }
-        console.log(req.query.id_code);
-        Admin.findOne({id_code: req.query.id_code}, function (err, admin) {
-            if(err){
-                res.status(400).json({error: err});
-            }
-            if(admin){
-                res.status(200).json({admin_id: admin._id});
-            }else{
-                res.status(404).json({info: 'not found'});
-            }
-        });
+        else{
+            console.log(req.query.id_code);
+            Admin.findOne({id_code: req.query.id_code}, function (err, admin) {
+                if(err){
+                    res.status(400).json({error: err});
+                }
+                if(admin){
+                    res.status(200).json({admin_id: admin._id});
+                }else{
+                    res.status(404).json({info: 'not found'});
+                }
+            });
+        }
+
     });
 
 

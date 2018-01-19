@@ -7,9 +7,9 @@ module.exports = function (app) {
         var entry = new Client(req.body);
         entry.save(function(err){
             if(err){
-                res.json({info: 'Error while creating client account', error: err});
+                res.status(400).json({info: 'Error while creating client account', errors: err.errors});
             }else{
-                res.json({info: 'Successfully created client account'})
+                res.status(201).json({info: 'Successfully created client account'})
             }
         });
     });
@@ -34,13 +34,14 @@ module.exports = function (app) {
         Client.findOne({
             username: req.body.username,
             password: req.body.password
-        },function (err, client) {
-            if(err){ res.json({info: "Error during trying to log in", error: err}) }
+        }, '-password -_id -__v'
+        ,function (err, client) {
+            if(err){ res.status(400).json({info: "Error during trying to log in", error: err}) }
             if(client){
                 console.log(client);
-                res.json({info: "Credentials correct", client: client});
+                res.status(200).json({info: "Credentials correct", client: client});
             }else{
-                res.json({info: "Incorrect credentials"});
+                res.status(401).json({info: "Incorrect credentials"});
             }
         });
     });
@@ -54,16 +55,22 @@ module.exports = function (app) {
                 password: req.body.password
             },
             {
-                id_code: req.body.id_code
+                id_code: req.body.id_code,
+                admin: req.body.admin_id
             },
             {
                 new: true
             }, function (err, client) {
-                if(err){ res.json({info: "Error while trying to update id_code", error: err});}
+                if(err){ res.status(400).json({info: "Error while trying to update id_code", error: err});}
                 if(client){
-                    res.json({info: "Update successful", client: client});
+                    client.linked = true;
+                    client.save(function(err) {
+                        if (err)
+                            res.status(400).json({info: 'Error while setting linked to true', error: err});
+                    });
+                    res.status(200).json({info: "Update successful", client: client});
                 }else{
-                    res.json({info: "Incorrect credentials"});
+                    res.status(404).json({info: "Incorrect credentials"});
                 }
             });
     });

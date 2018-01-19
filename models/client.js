@@ -1,20 +1,27 @@
 var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
+
+var validators = require('./validators/client');
+
 
 var clientModel = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        validate: validators.nameValidator
     },
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: validators.usernameValidator
+
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        match: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        validate: validators.emailValidator
     },
     password: {
         type: String,
@@ -22,14 +29,25 @@ var clientModel = mongoose.Schema({
         select: false
     },
     id_code: {
-        type: String,
-        required: true
+        type: String
     },
     admin: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Admin',
-        required: true
+        ref: 'Admin'
+    },
+    linked: {
+        type: Boolean,
+        default: false
     }
 });
 
-module.exports = mongoose.model('Client', clientModel);
+clientModel.plugin(uniqueValidator);
+
+
+Client = mongoose.model('Client', clientModel);
+module.exports = Client;
+
+
+
+// Client.schema.path('name').validate(
+// }, 'This name is already registered');
